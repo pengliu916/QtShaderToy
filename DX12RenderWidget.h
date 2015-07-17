@@ -8,6 +8,7 @@ class DX12RenderWidget : public QWidget
     Q_DISABLE_COPY(DX12RenderWidget)
 public:
     DX12RenderWidget(QWidget* parent = NULL);
+	void InitGFXBackEnd ();
     virtual ~DX12RenderWidget();
 
 protected:

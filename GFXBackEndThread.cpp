@@ -2,25 +2,32 @@
 
 #include "GFXBackEndThread.h"
 
-GFXBackEndThread::GFXBackEndThread(HWND _hwnd)
+GFXBackEndThread::GFXBackEndThread( HWND _hwnd, uint16_t width, uint16_t height )
 {
-	stopped = false;
-	//needResize = true;
+	_stopped = false;
+	_needResize = true;
 
+	_width = width;
+	_height = height;
 	_gfxCore = new DXGfxCore();
-	_gfxCore->Init(_hwnd);
+	_gfxCore->Init( _hwnd );
 	_gfxCore->CreateDevice();
 }
 
 void GFXBackEndThread::stop()
 {
-	stopped = true;
+	_stopped = true;
 }
 
 void GFXBackEndThread::run()
 {
-	while (!stopped)
+	while ( !_stopped )
 	{
+		if ( _needResize )
+		{
+			_needResize = false;
+			_gfxCore->Resize( _width, _height );
+		}
 		_gfxCore->Update();
 		_gfxCore->Render();
 	}
@@ -29,3 +36,9 @@ void GFXBackEndThread::run()
 	delete _gfxCore;
 }
 
+void GFXBackEndThread::resize( uint16_t width, uint16_t height )
+{
+	_width = width;
+	_height = height;
+	_needResize = true;
+}

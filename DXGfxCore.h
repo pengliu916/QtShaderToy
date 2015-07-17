@@ -8,19 +8,19 @@ class DXGfxCore
 {
 public:
 	DXGfxCore();
-	bool Init(HWND);
+	bool Init( HWND );
 	bool CreateDevice();
-	bool Resize();
+	bool Resize( uint16_t, uint16_t );
 	void Update();
 	void Render();
 	void Release();
 	void Destory();
 
 private:
-	void WaitForCommandQueue(ID3D12CommandQueue*);
+	void WaitForCommandQueue( ID3D12CommandQueue* );
 	HWND								hwnd;
 	HANDLE								hFenceEvent;
-	
+
 	ComPtr<ID3D12Device>				dxDevice;
 	ComPtr<ID3D12CommandQueue>			cmdQueue;
 	ComPtr<ID3D12CommandAllocator>		cmdAllocator;
@@ -43,6 +43,10 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE			handleRTV[2];
 	D3D12_CPU_DESCRIPTOR_HANDLE			handleDSV;
+
+	DXGI_SWAP_CHAIN_DESC				descSwapChain;
+	D3D12_VIEWPORT						viewPort;
+	D3D12_RECT							viewRect;
 
 	uint16_t							windowWidth;
 	uint16_t							windowHeight;
