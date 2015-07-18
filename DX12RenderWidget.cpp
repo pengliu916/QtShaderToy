@@ -6,6 +6,9 @@ DX12RenderWidget::DX12RenderWidget(QWidget* parent)
     setAttribute(Qt::WA_PaintOnScreen, true);
     setAttribute(Qt::WA_NativeWindow, true);
     
+	this->setMinimumWidth( 320 );
+	this->setMinimumHeight( 240 );
+
 	_gfxBackEndThread = new GFXBackEndThread((HWND)winId());
 	_gfxBackEndThread->start();
 }
