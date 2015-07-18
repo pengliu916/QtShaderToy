@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|x64">
@@ -14,9 +14,10 @@
     <ProjectGuid>{AF25BA57-E258-38D5-8FC3-1782724B90B2}</ProjectGuid>
     <RootNamespace>DX12Frame</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
+    <TargetPlatformVersion>10.0.10069.0</TargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <PlatformToolSet>v140</PlatformToolSet>
     <OutputDirectory>release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -25,7 +26,7 @@
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>DX12Frame</PrimaryOutput>
   </PropertyGroup>
-  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <PlatformToolSet>v140</PlatformToolSet>
     <OutputDirectory>debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -36,25 +37,25 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
-  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\</OutDir>
-    <IntDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\</IntDir>
-    <TargetName Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">DX12Frame</TargetName>
-    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</IgnoreImportLibrary>
-    <LinkIncremental Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">false</LinkIncremental>
-    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\</OutDir>
-    <IntDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\</IntDir>
-    <TargetName Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">DX12Frame</TargetName>
-    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</IgnoreImportLibrary>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutputDirectory)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutputDirectory)</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DX12Frame</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutputDirectory)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutputDirectory)</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DX12Frame</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;.;..\..\..\ProjectLibrary\qt5\qtbase\include;..\..\..\ProjectLibrary\qt5\qtbase\include\QtWidgets;..\..\..\ProjectLibrary\qt5\qtbase\include\QtGui;..\..\..\ProjectLibrary\qt5\qtbase\include\QtANGLE;..\..\..\ProjectLibrary\qt5\qtbase\include\QtCore;release;..\..\..\ProjectLibrary\qt5\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
@@ -66,7 +67,8 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;QT_OPENGL_ES_2_ANGLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
-      <ProgramDataBaseFileName></ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -76,7 +78,7 @@
     <Link>
       <AdditionalDependencies>D:\ProjectLibrary\qt5\qtbase\lib\qtmain.lib;shell32.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Widgets.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Gui.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Core.lib;libEGL.lib;libGLESv2.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\ProjectLibrary\qt5\qtbase\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -95,7 +97,7 @@
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;QT_OPENGL_ES_2_ANGLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;.;..\..\..\ProjectLibrary\qt5\qtbase\include;..\..\..\ProjectLibrary\qt5\qtbase\include\QtWidgets;..\..\..\ProjectLibrary\qt5\qtbase\include\QtGui;..\..\..\ProjectLibrary\qt5\qtbase\include\QtANGLE;..\..\..\ProjectLibrary\qt5\qtbase\include\QtCore;debug;..\..\..\ProjectLibrary\qt5\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
@@ -105,7 +107,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>debug\</ObjectFileName>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;QT_OPENGL_ES_2_ANGLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;UNICODE;WIN32;WIN64;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;QT_OPENGL_ES_2_ANGLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -116,7 +118,7 @@
     <Link>
       <AdditionalDependencies>D:\ProjectLibrary\qt5\qtbase\lib\qtmaind.lib;shell32.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Widgetsd.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Guid.lib;D:\ProjectLibrary\qt5\qtbase\lib\Qt5Cored.lib;libEGLd.lib;libGLESv2d.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\ProjectLibrary\qt5\qtbase\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -142,40 +144,74 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DX12RenderWidget.h">
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">DX12RenderWidget.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore DX12RenderWidget.h -o release\moc_DX12RenderWidget.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">MOC DX12RenderWidget.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_DX12RenderWidget.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">DX12RenderWidget.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore DX12RenderWidget.h -o debug\moc_DX12RenderWidget.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">MOC DX12RenderWidget.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\moc_DX12RenderWidget.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DX12RenderWidget.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore DX12RenderWidget.h -o release\moc_DX12RenderWidget.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC DX12RenderWidget.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_DX12RenderWidget.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DX12RenderWidget.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore DX12RenderWidget.h -o debug\moc_DX12RenderWidget.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC DX12RenderWidget.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_DX12RenderWidget.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="DXGfxCore.h" />
     <CustomBuild Include="GFXBackEndThread.h">
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">GFXBackEndThread.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore GFXBackEndThread.h -o release\moc_GFXBackEndThread.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">MOC GFXBackEndThread.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_GFXBackEndThread.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">GFXBackEndThread.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore GFXBackEndThread.h -o debug\moc_GFXBackEndThread.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">MOC GFXBackEndThread.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\moc_GFXBackEndThread.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GFXBackEndThread.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore GFXBackEndThread.h -o release\moc_GFXBackEndThread.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC GFXBackEndThread.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_GFXBackEndThread.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GFXBackEndThread.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\ProjectLibrary\qt5\qtbase\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DQT_OPENGL_ES_2_ANGLE -D_MSC_VER=1900 -D_WIN32 -D_WIN64 -ID:/ProjectLibrary/qt5/qtbase/mkspecs/win32-msvc2015 -ID:/Projects/QtProjects/DX12Frame -ID:/Projects/QtProjects/DX12Frame -ID:/ProjectLibrary/qt5/qtbase/include -ID:/ProjectLibrary/qt5/qtbase/include/QtWidgets -ID:/ProjectLibrary/qt5/qtbase/include/QtGui -ID:/ProjectLibrary/qt5/qtbase/include/QtANGLE -ID:/ProjectLibrary/qt5/qtbase/include/QtCore GFXBackEndThread.h -o debug\moc_GFXBackEndThread.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC GFXBackEndThread.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_GFXBackEndThread.cpp;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug\moc_DX12RenderWidget.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_DX12RenderWidget.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug\moc_GFXBackEndThread.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_GFXBackEndThread.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PixelShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

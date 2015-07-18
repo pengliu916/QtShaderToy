@@ -5,11 +5,13 @@ DX12RenderWidget::DX12RenderWidget(QWidget* parent)
 {
     setAttribute(Qt::WA_PaintOnScreen, true);
     setAttribute(Qt::WA_NativeWindow, true);
-    
-	_gfxBackEndThread = new GFXBackEndThread((HWND)winId());
-	_gfxBackEndThread->start();
 }
 
+void DX12RenderWidget::InitGFXBackEnd ()
+{
+	_gfxBackEndThread = new GFXBackEndThread ( ( HWND ) winId (), this->width(),this->height() );
+	_gfxBackEndThread->start ();
+}
 DX12RenderWidget::~DX12RenderWidget()
 {
 	_gfxBackEndThread->stop();
@@ -25,4 +27,5 @@ void DX12RenderWidget::paintEvent(QPaintEvent* evt)
 void DX12RenderWidget::resizeEvent(QResizeEvent* evt)
 {
 	Q_UNUSED(evt);
+	_gfxBackEndThread->resize ( this->width (), this->height () );
 }

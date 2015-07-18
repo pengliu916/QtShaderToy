@@ -2,42 +2,25 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_4.h>
-//
-// Handle to an Object
-//
-//
-//#ifdef STRICT
-//typedef void *HANDLE;
-//#if 0 && (_MSC_VER > 1000)
-//#define DECLARE_HANDLE(name) struct name##__; typedef struct name##__ *name
-//#else
-//#define DECLARE_HANDLE(name) struct name##__{int unused;}; typedef struct name##__ *name
-//#endif
-//#else
-//typedef PVOID HANDLE;
-//#define DECLARE_HANDLE(name) typedef HANDLE name
-//#endif
-//typedef HANDLE *PHANDLE;
 
-//typedef void* HANDLE;
 using namespace Microsoft::WRL;
 class DXGfxCore
 {
 public:
 	DXGfxCore();
-	bool Init(HWND);
+	bool Init( HWND );
 	bool CreateDevice();
-	bool Resize();
+	bool Resize( uint16_t, uint16_t );
 	void Update();
 	void Render();
 	void Release();
 	void Destory();
 
 private:
-	void WaitForCommandQueue(ID3D12CommandQueue*);
+	void WaitForCommandQueue( ID3D12CommandQueue* );
 	HWND								hwnd;
 	HANDLE								hFenceEvent;
-	
+
 	ComPtr<ID3D12Device>				dxDevice;
 	ComPtr<ID3D12CommandQueue>			cmdQueue;
 	ComPtr<ID3D12CommandAllocator>		cmdAllocator;
@@ -47,5 +30,24 @@ private:
 	ComPtr<IDXGIFactory3>				dxgiFactory;
 	ComPtr<ID3D12DescriptorHeap>		descriptorHeapRTV;
 	ComPtr<ID3D12Resource>				renderTarget[2];
-	D3D12_CPU_DESCRIPTOR_HANDLE handleRTV[2];
+	ComPtr<ID3D12Resource>				renderTargetDepth;
+	ComPtr<ID3D12RootSignature>			rootSignature;
+	ComPtr<ID3D12PipelineState>			pipelineState;
+	ComPtr<ID3D12DescriptorHeap>		descriptorHeapCB;
+	ComPtr<ID3D12DescriptorHeap>		descriptorHeapDSB;
+	ComPtr<ID3D12Resource>				vertexBuffer;
+	ComPtr<ID3D12Resource>				indexBuffer;
+	ComPtr<ID3D12Resource>				constantBuffer;
+	D3D12_VERTEX_BUFFER_VIEW			vertexView;
+	D3D12_INDEX_BUFFER_VIEW				indexView;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE			handleRTV[2];
+	D3D12_CPU_DESCRIPTOR_HANDLE			handleDSV;
+
+	DXGI_SWAP_CHAIN_DESC				descSwapChain;
+	D3D12_VIEWPORT						viewPort;
+	D3D12_RECT							viewRect;
+
+	uint16_t							windowWidth;
+	uint16_t							windowHeight;
 };
