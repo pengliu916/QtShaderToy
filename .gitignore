@@ -5,6 +5,13 @@
 *.suo
 *.user
 *.sln.docstates
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.cso
+Makefile
+Makefile.Debug
+Makefile.Release
 
 # Build results
 [Dd]ebug/
