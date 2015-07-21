@@ -1,9 +1,48 @@
-#include <stdio.h>
+#include <iostream>
 #include <DirectXMath.h>
 #include "DXGfxCore.h"
 
 #pragma comment( lib, "d3d12.lib" )
 #pragma comment(lib, "dxgi.lib")
+
+#define DEBUG
+
+#if defined(DEBUG) || defined(_DEBUG)
+#ifndef V
+#define V(x)           { hr = (x); if( FAILED(hr) ) { DXTrace( __FILE__, (DWORD)__LINE__, hr, #x); } }
+#endif //#ifndef V
+#ifndef VRET
+#define VRET(x)           { hr = (x); if( FAILED(hr) ) { return DXTrace( __FILE__, (DWORD)__LINE__, hr, #x); } }
+#endif //#ifndef VRET
+#else
+#ifndef V
+#define V(x)           { hr = (x); }
+#endif //#ifndef V
+#ifndef VRET
+#define VRET(x)           { hr = (x); if( FAILED(hr) ) { return hr; } }
+#endif //#ifndef VRET
+#endif //#if defined(DEBUG) || defined(_DEBUG)
+
+static HRESULT DXTrace( const char* strFile, DWORD dwLine, HRESULT hr, const char* strMsg )
+{
+	std::cerr << "*ERROR*: ";
+	if( strFile )
+		std::cerr << dwLine << " @ " << strFile;
+	size_t nMsgLen = ( strMsg ) ? strnlen_s( strMsg, 1024 ) : 0;
+	if ( nMsgLen > 0 )
+		std::cerr << " Calling: " << strMsg << " failed!\n";
+	return hr;
+}
+
+static void DXTrace( const char* strFile, DWORD dwLine, const char* strMsg )
+{
+	std::cerr << "*ERROR*: ";
+	if ( strFile )
+		std::cerr << dwLine << " @ " << strFile;
+	size_t nMsgLen = ( strMsg ) ? strnlen_s( strMsg, 1024 ) : 0;
+	if ( nMsgLen > 0 )
+		std::cerr << " " << strMsg << "\n";
+}
 
 using namespace DirectX;
 
@@ -15,7 +54,7 @@ struct Vertex
 
 struct DXBolb
 {
-	uint16_t size;
+	long size;
 	void* ptr;
 };
 
@@ -117,17 +156,15 @@ ComPtr<ID3D12Resource> CreateVertexBuffer(
 
 	ComPtr<ID3D12Resource> vertexBuffer;
 	HRESULT hr;
-	hr = device->CreateCommittedResource(
+	V(device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceVB,
 		states,
 		nullptr,
 		IID_PPV_ARGS( vertexBuffer.GetAddressOf() )
-		);
-	if ( FAILED( hr ) ) {
-		OutputDebugString( L"CreateCommittedResource() failed.\n" );
-	}
+		));
+	
 	return vertexBuffer;
 }
 
@@ -153,17 +190,15 @@ ComPtr<ID3D12Resource> CreateIndexBuffer( ID3D12Device * device, int bufferSize,
 
 	ComPtr<ID3D12Resource> indexBuffer;
 	HRESULT hr;
-	hr = device->CreateCommittedResource(
+	V(device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceIB,
 		states,
 		nullptr,
 		IID_PPV_ARGS( indexBuffer.GetAddressOf() )
-		);
-	if ( FAILED( hr ) ) {
-		OutputDebugString( L"CreateCommittedResource() failed.\n" );
-	}
+		));
+	
 	return indexBuffer;
 }
 
@@ -189,17 +224,14 @@ ComPtr<ID3D12Resource> CreateConstantBuffer( ID3D12Device * device, int bufferSi
 	descResourceVB.SampleDesc.Count = 1;
 
 	HRESULT hr;
-	hr = device->CreateCommittedResource(
+	V(device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceVB,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS( cbBuffer.GetAddressOf() )
-		);
-	if ( FAILED( hr ) ) {
-		OutputDebugString( L"CreateCommittedResource() failed.\n" );
-	}
+		));
 	return cbBuffer;
 }
 
@@ -229,14 +261,15 @@ ComPtr<ID3D12Resource> CreateDepthBuffer( ID3D12Device * device, int width, int 
 	dsvClearValue.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvClearValue.DepthStencil.Depth = 1.0f;
 	dsvClearValue.DepthStencil.Stencil = 0;
-	HRESULT hr = device->CreateCommittedResource(
+	HRESULT hr;
+	V(device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descDepth,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&dsvClearValue,
 		IID_PPV_ARGS( depthBuffer.ReleaseAndGetAddressOf() )
-		);
+		));
 	return depthBuffer;
 }
 
@@ -249,18 +282,18 @@ DXGfxCore::DXGfxCore()
 bool DXGfxCore::Init( HWND _hwnd )
 {
 	hwnd = _hwnd;
-	windowWidth = 640;
-	windowHeight = 480;
+	windowWidth = 0;
+	windowHeight = 0;
 	return true;
 }
 
-bool DXGfxCore::CreateDevice()
+HRESULT DXGfxCore::CreateDevice()
 {
 	// Create DXGI device
 	UINT flagsDXGI = 0;
 	ID3D12Debug* debug = nullptr;
 	HRESULT hr;
-#if _DEBUG
+#if 1 || _DEBUG
 	D3D12GetDebugInterface( IID_PPV_ARGS( &debug ) );
 	if ( debug ) {
 		debug->EnableDebugLayer();
@@ -268,25 +301,20 @@ bool DXGfxCore::CreateDevice()
 	}
 	flagsDXGI |= DXGI_CREATE_FACTORY_DEBUG;
 #endif
-	hr = CreateDXGIFactory2( flagsDXGI, IID_PPV_ARGS( dxgiFactory.ReleaseAndGetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(CreateDXGIFactory2( flagsDXGI, IID_PPV_ARGS( dxgiFactory.ReleaseAndGetAddressOf() ) ));
 
 	// Create DX device
 	ComPtr<IDXGIAdapter> adapter;
-	hr = dxgiFactory->EnumAdapters( 0, adapter.GetAddressOf() );
-	assert( !FAILED( hr ) );
+	VRET(dxgiFactory->EnumAdapters( 0, adapter.GetAddressOf() ));
 
-	hr = D3D12CreateDevice( adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS( dxDevice.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(D3D12CreateDevice( adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS( dxDevice.GetAddressOf() ) ));
 
 	// Check hardware support
 	D3D12_FEATURE_DATA_D3D12_OPTIONS options;
-	hr = dxDevice->CheckFeatureSupport( D3D12_FEATURE_D3D12_OPTIONS, ( void* ) &options, sizeof( options ) );
-	assert( !FAILED( hr ) );
+	VRET(dxDevice->CheckFeatureSupport( D3D12_FEATURE_D3D12_OPTIONS, ( void* ) &options, sizeof( options ) ));
 
 	// Create command allocator
-	hr = dxDevice->CreateCommandAllocator( D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS( cmdAllocator.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(dxDevice->CreateCommandAllocator( D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS( cmdAllocator.GetAddressOf() ) ));
 
 	// Create command queue
 	D3D12_COMMAND_QUEUE_DESC descCommandQueue;
@@ -294,16 +322,13 @@ bool DXGfxCore::CreateDevice()
 	descCommandQueue.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	descCommandQueue.Priority = 0;
 	descCommandQueue.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	hr = dxDevice->CreateCommandQueue( &descCommandQueue, IID_PPV_ARGS( cmdQueue.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(dxDevice->CreateCommandQueue( &descCommandQueue, IID_PPV_ARGS( cmdQueue.GetAddressOf() ) ));
 
 	// Create fence
 	hFenceEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-	hr = dxDevice->CreateFence( 0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS( queueFence.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(dxDevice->CreateFence( 0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS( queueFence.GetAddressOf() ) ));
 
 	// Create swap chain
-
 	ZeroMemory( &descSwapChain, sizeof( descSwapChain ) );
 	descSwapChain.BufferCount = 2;
 	descSwapChain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -313,12 +338,10 @@ bool DXGfxCore::CreateDevice()
 	descSwapChain.Windowed = TRUE;
 	descSwapChain.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 	descSwapChain.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-	hr = dxgiFactory->CreateSwapChain( cmdQueue.Get(), &descSwapChain, ( IDXGISwapChain** ) swapChain.GetAddressOf() );
-	assert( !FAILED( hr ) );
+	VRET(dxgiFactory->CreateSwapChain( cmdQueue.Get(), &descSwapChain, ( IDXGISwapChain** ) swapChain.GetAddressOf() ));
 
 	// Create command list
-	hr = dxDevice->CreateCommandList( 0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator.Get(), nullptr, IID_PPV_ARGS( cmdList.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
+	VRET(dxDevice->CreateCommandList( 0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator.Get(), nullptr, IID_PPV_ARGS( cmdList.GetAddressOf() ) ));
 
 	// Create descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC descHeap;
@@ -326,23 +349,16 @@ bool DXGfxCore::CreateDevice()
 	descHeap.NumDescriptors = 2;
 	descHeap.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	descHeap.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = dxDevice->CreateDescriptorHeap( &descHeap, IID_PPV_ARGS( descriptorHeapRTV.GetAddressOf() ) );
-	assert( !FAILED( hr ) );
-
+	VRET(dxDevice->CreateDescriptorHeap( &descHeap, IID_PPV_ARGS( descriptorHeapRTV.GetAddressOf() ) ));
 
 	D3D12_DESCRIPTOR_HEAP_DESC descDescriptorHeapDSB;
 	ZeroMemory( &descDescriptorHeapDSB, sizeof( descDescriptorHeapDSB ) );
 	descDescriptorHeapDSB.NumDescriptors = 1;
 	descDescriptorHeapDSB.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	descDescriptorHeapDSB.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = dxDevice->CreateDescriptorHeap(
+	VRET(dxDevice->CreateDescriptorHeap(
 		&descDescriptorHeapDSB,
-		IID_PPV_ARGS( descriptorHeapDSB.GetAddressOf() ) );
-	if ( FAILED( hr ) ) {
-		MessageBoxW( NULL, L"CreateDescriptorHeap() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
-
+		IID_PPV_ARGS( descriptorHeapDSB.GetAddressOf() ) ));
 
 	// Setup resource
 	D3D12_ROOT_SIGNATURE_DESC descRootSignature;
@@ -356,16 +372,16 @@ bool DXGfxCore::CreateDevice()
 	descRootSignature.NumParameters = 1;
 	descRootSignature.pParameters = rootParameters;
 	ComPtr<ID3DBlob> rootSigBlob, errorBlob;
-	hr = D3D12SerializeRootSignature( &descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, rootSigBlob.GetAddressOf(), errorBlob.GetAddressOf() );
-	hr = dxDevice->CreateRootSignature( 0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS( rootSignature.GetAddressOf() ) );
-	if ( FAILED( hr ) ) {
-		MessageBoxW( NULL, L"CreateRootSignature() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
+	VRET(D3D12SerializeRootSignature( &descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, rootSigBlob.GetAddressOf(), errorBlob.GetAddressOf() ));
+	VRET(dxDevice->CreateRootSignature( 0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS( rootSignature.GetAddressOf() ) ));
 
 	FILE* fpVS = nullptr;
-	fopen_s( &fpVS, "VertexShader.cso", "rb" );
-	if ( !fpVS ) { return FALSE; }
+	fopen_s( &fpVS, "VertexShader1.cso", "rb" );
+	if ( !fpVS ) 
+	{ 
+		DXTrace( __FILE__, ( DWORD ) __LINE__, "Cannot open VertexShader.cso" );
+		return E_FAIL;
+	}
 	fseek( fpVS, 0, SEEK_END );
 	gVS.size = ftell( fpVS ); rewind( fpVS );
 	gVS.ptr = malloc( gVS.size );
@@ -373,7 +389,11 @@ bool DXGfxCore::CreateDevice()
 	fclose( fpVS ); fpVS = nullptr;
 	FILE* fpPS = nullptr;
 	fopen_s( &fpPS, "PixelShader.cso", "rb" );
-	if ( !fpPS ) { return FALSE; }
+	if ( !fpPS )
+	{
+		DXTrace( __FILE__, ( DWORD ) __LINE__, hr, "Cannot open PixelShader.cso" );
+		return E_FAIL;
+	}
 	fseek( fpPS, 0, SEEK_END );
 	gPS.size = ftell( fpPS ); rewind( fpPS );
 	gPS.ptr = malloc( gPS.size );
@@ -396,32 +416,22 @@ bool DXGfxCore::CreateDevice()
 	descPipelineState.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	descPipelineState.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	descPipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	hr = dxDevice->CreateGraphicsPipelineState( &descPipelineState, IID_PPV_ARGS( pipelineState.GetAddressOf() ) );
-	if ( FAILED( hr ) ) {
-		MessageBoxW( NULL, L"CreateGraphicsPipelineState() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
+	V(dxDevice->CreateGraphicsPipelineState( &descPipelineState, IID_PPV_ARGS( pipelineState.GetAddressOf() ) ));
 
 	vertexBuffer = CreateVertexBuffer(
 		dxDevice.Get(),
 		sizeof( cubeVertices ),
 		D3D12_HEAP_TYPE_UPLOAD,
 		D3D12_RESOURCE_STATE_GENERIC_READ );
-	if ( !vertexBuffer ) {
-		MessageBoxW( NULL, L"CreateCommittedResource() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
+	if ( !vertexBuffer ) return S_FALSE;
 
 	void* mapped = nullptr;
-	hr = vertexBuffer->Map( 0, nullptr, &mapped );
+	VRET(vertexBuffer->Map( 0, nullptr, &mapped ));
 	if ( SUCCEEDED( hr ) ) {
 		memcpy( mapped, cubeVertices, sizeof( cubeVertices ) );
 		vertexBuffer->Unmap( 0, nullptr );
 	}
-	if ( FAILED( hr ) ) {
-		MessageBoxW( NULL, L"vertexBuffer->Map() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
+
 	vertexView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
 	vertexView.StrideInBytes = sizeof( Vertex );
 	vertexView.SizeInBytes = sizeof( cubeVertices );
@@ -431,11 +441,8 @@ bool DXGfxCore::CreateDevice()
 		sizeof( cubeIndices ),
 		D3D12_HEAP_TYPE_UPLOAD,
 		D3D12_RESOURCE_STATE_GENERIC_READ );
-	if ( !indexBuffer ) {
-		MessageBoxW( NULL, L"CreateCommittedResource() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
-	hr = indexBuffer->Map( 0, nullptr, &mapped );
+
+	VRET(indexBuffer->Map( 0, nullptr, &mapped ));
 	if ( SUCCEEDED( hr ) ) {
 		memcpy( mapped, cubeIndices, sizeof( cubeIndices ) );
 		indexBuffer->Unmap( 0, nullptr );
@@ -445,11 +452,8 @@ bool DXGfxCore::CreateDevice()
 	indexView.Format = DXGI_FORMAT_R16_UINT;
 
 	constantBuffer = CreateConstantBuffer( dxDevice.Get(), sizeof( XMFLOAT4X4 ) );
-	if ( !constantBuffer ) {
-		MessageBoxW( NULL, L"[for constantBuffer] CreateCommittedResource() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
-	hr = constantBuffer->Map( 0, nullptr, &mapped );
+
+	VRET(constantBuffer->Map( 0, nullptr, &mapped ));
 	if ( SUCCEEDED( hr ) ) {
 		XMFLOAT4X4 mtx;
 		XMStoreFloat4x4( &mtx, XMMatrixIdentity() );
@@ -459,9 +463,11 @@ bool DXGfxCore::CreateDevice()
 	return TRUE;
 }
 
-bool DXGfxCore::Resize( uint16_t width, uint16_t height )
+HRESULT DXGfxCore::Resize( uint16_t width, uint16_t height )
 {
 	HRESULT hr = S_OK;
+	if ( width == windowWidth && height == windowHeight )
+		return hr;
 	for ( UINT i = 0; i < descSwapChain.BufferCount; ++i ) {
 		if ( renderTarget[i].Get() )
 			renderTarget[i].Get()->Release();
@@ -470,14 +476,13 @@ bool DXGfxCore::Resize( uint16_t width, uint16_t height )
 	windowWidth = width;
 	windowHeight = height;
 
-	swapChain->ResizeBuffers( descSwapChain.BufferCount, windowWidth,
+	V(swapChain->ResizeBuffers( descSwapChain.BufferCount, windowWidth,
 							  windowHeight, descSwapChain.BufferDesc.Format,
-							  descSwapChain.Flags );
+							  descSwapChain.Flags ));
 
 	UINT strideHandleBytes = dxDevice->GetDescriptorHandleIncrementSize( D3D12_DESCRIPTOR_HEAP_TYPE_RTV );
 	for ( UINT i = 0; i < descSwapChain.BufferCount; ++i ) {
-		hr = swapChain->GetBuffer( i, IID_PPV_ARGS( renderTarget[i].GetAddressOf() ) );
-		assert( !FAILED( hr ) );
+		VRET(swapChain->GetBuffer( i, IID_PPV_ARGS( renderTarget[i].GetAddressOf() ) ));
 
 		handleRTV[i] = descriptorHeapRTV->GetCPUDescriptorHandleForHeapStart();
 		handleRTV[i].ptr += i*strideHandleBytes;
@@ -487,10 +492,6 @@ bool DXGfxCore::Resize( uint16_t width, uint16_t height )
 	//renderTargetDepth.~ComPtr ();
 	renderTargetDepth.Reset();
 	renderTargetDepth = CreateDepthBuffer( dxDevice.Get(), windowWidth, windowHeight );
-	if ( !renderTargetDepth ) {
-		MessageBoxW( NULL, L"CreateDepthBuffer() failed.", L"ERROR", MB_OK );
-		return FALSE;
-	}
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC descDSV;
 	ZeroMemory( &descDSV, sizeof( descDSV ) );
@@ -507,6 +508,7 @@ bool DXGfxCore::Resize( uint16_t width, uint16_t height )
 	viewPort = { 0.0f, 0.0f, ( float ) windowWidth, ( float ) windowHeight, 0.0f, 1.0f };
 	viewRect = { 0, 0, windowWidth, windowHeight };
 
+	std::cout << "Back buffer resized to : " << width << "x" << height << "\n";
 	return true;
 }
 
@@ -517,6 +519,7 @@ void DXGfxCore::Update()
 
 void DXGfxCore::Render()
 {
+	HRESULT hr = S_OK;
 	static int count = 0;
 
 	XMMATRIX view = XMMatrixLookAtLH(
@@ -535,13 +538,13 @@ void DXGfxCore::Render()
 	world = XMMatrixRotationY( count*0.02f );
 	XMMATRIX wvp = XMMatrixMultiply( XMMatrixMultiply( world, view ), proj );
 	void* pCB;
-	constantBuffer->Map( 0, nullptr, &pCB );
+	V(constantBuffer->Map( 0, nullptr, &pCB ));
 	if ( pCB ) {
 		XMStoreFloat4x4( ( XMFLOAT4X4* ) pCB, wvp );
 		constantBuffer->Unmap( 0, nullptr );
 	}
 
-	ID3D12DescriptorHeap* heaps[] = { descriptorHeapCB.Get() };
+	//ID3D12DescriptorHeap* heaps[] = { descriptorHeapCB.Get() };
 
 	int targetIndex = swapChain->GetCurrentBackBufferIndex();
 	float clearColor[4] = { 0.2f, 0.45f, 0.8f, 0.0f };

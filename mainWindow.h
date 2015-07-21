@@ -2,7 +2,7 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-class QListWidget;
+class QTextEdit;
 class QMenu;
 QT_END_NAMESPACE
 
@@ -14,12 +14,12 @@ class MainWindow : public QMainWindow
 public:
 	MainWindow();
 
-private:
+
 	void createMenus();
 	void createDockWindows();
 
 	DX12RenderWidget* renderWidget;
-	QListWidget *outputList;
+	QTextEdit *outputList;
 
 	QMenu *viewMenu;
 };

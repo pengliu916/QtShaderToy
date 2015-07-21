@@ -17,6 +17,7 @@ private:
 	DXGfxCore* _gfxCore;
 	volatile bool _stopped;
 	volatile bool _needResize;
+	volatile bool _encounteredError;
 	volatile uint16_t _width;
 	volatile uint16_t _height;
 };

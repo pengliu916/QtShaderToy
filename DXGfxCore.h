@@ -9,8 +9,8 @@ class DXGfxCore
 public:
 	DXGfxCore();
 	bool Init( HWND );
-	bool CreateDevice();
-	bool Resize( uint16_t, uint16_t );
+	HRESULT CreateDevice();
+	HRESULT Resize( uint16_t, uint16_t );
 	void Update();
 	void Render();
 	void Release();

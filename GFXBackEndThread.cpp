@@ -11,7 +11,7 @@ GFXBackEndThread::GFXBackEndThread( HWND _hwnd, uint16_t width, uint16_t height 
 	_height = height;
 	_gfxCore = new DXGfxCore();
 	_gfxCore->Init( _hwnd );
-	_gfxCore->CreateDevice();
+	_encounteredError = FAILED(_gfxCore->CreateDevice());
 }
 
 void GFXBackEndThread::stop()
@@ -21,15 +21,15 @@ void GFXBackEndThread::stop()
 
 void GFXBackEndThread::run()
 {
-	while ( !_stopped )
+	while ( !_stopped && !_encounteredError )
 	{
 		if ( _needResize )
 		{
 			_needResize = false;
-			_gfxCore->Resize( _width, _height );
+			_encounteredError = FAILED(_gfxCore->Resize( _width, _height ));
 		}
-		_gfxCore->Update();
-		_gfxCore->Render();
+			_gfxCore->Update();
+			_gfxCore->Render();
 	}
 	_gfxCore->Release();
 	_gfxCore->Destory();
