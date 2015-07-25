@@ -2,6 +2,8 @@
 #include <DirectXMath.h>
 #include "DXGfxCore.h"
 
+#include "Communicator.h"
+
 #pragma comment( lib, "d3d12.lib" )
 #pragma comment(lib, "dxgi.lib")
 
@@ -23,25 +25,27 @@
 #endif //#ifndef VRET
 #endif //#if defined(DEBUG) || defined(_DEBUG)
 
-static HRESULT DXTrace( const char* strFile, DWORD dwLine, HRESULT hr, const char* strMsg )
+HRESULT DXGfxCore::DXTrace( const char* strFile, DWORD dwLine, HRESULT hr, const char* strMsg )
 {
-	std::cerr << "*ERROR*: ";
+    QString errorMsg;
 	if( strFile )
-		std::cerr << dwLine << " @ " << strFile;
+		errorMsg.append(QString("%1@%2").arg(QString::number(dwLine),QString(strFile)));
 	size_t nMsgLen = ( strMsg ) ? strnlen_s( strMsg, 1024 ) : 0;
 	if ( nMsgLen > 0 )
-		std::cerr << " Calling: " << strMsg << " failed!\n";
+		errorMsg.append( QString( " Calling: %1 failed!\n" ).arg( strMsg ));
+    communicator->printMessage(errorMsg,Communicator::MSG_ERROR);
 	return hr;
 }
 
-static void DXTrace( const char* strFile, DWORD dwLine, const char* strMsg )
+void DXGfxCore::DXTrace( const char* strFile, DWORD dwLine, const char* strMsg )
 {
-	std::cerr << "*ERROR*: ";
+    QString errorMsg;
 	if ( strFile )
-		std::cerr << dwLine << " @ " << strFile;
+		errorMsg.append( QString( "%1@%2" ).arg( QString::number( dwLine ), QString( strFile ) ) );
 	size_t nMsgLen = ( strMsg ) ? strnlen_s( strMsg, 1024 ) : 0;
 	if ( nMsgLen > 0 )
-		std::cerr << " " << strMsg << "\n";
+		errorMsg.append( QString( strMsg ) );
+    communicator->printMessage(errorMsg,Communicator::MSG_ERROR );
 }
 
 using namespace DirectX;
@@ -156,14 +160,14 @@ ComPtr<ID3D12Resource> CreateVertexBuffer(
 
 	ComPtr<ID3D12Resource> vertexBuffer;
 	HRESULT hr;
-	V(device->CreateCommittedResource(
+	device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceVB,
 		states,
 		nullptr,
 		IID_PPV_ARGS( vertexBuffer.GetAddressOf() )
-		));
+		);
 	
 	return vertexBuffer;
 }
@@ -190,14 +194,14 @@ ComPtr<ID3D12Resource> CreateIndexBuffer( ID3D12Device * device, int bufferSize,
 
 	ComPtr<ID3D12Resource> indexBuffer;
 	HRESULT hr;
-	V(device->CreateCommittedResource(
+	device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceIB,
 		states,
 		nullptr,
 		IID_PPV_ARGS( indexBuffer.GetAddressOf() )
-		));
+		);
 	
 	return indexBuffer;
 }
@@ -224,14 +228,14 @@ ComPtr<ID3D12Resource> CreateConstantBuffer( ID3D12Device * device, int bufferSi
 	descResourceVB.SampleDesc.Count = 1;
 
 	HRESULT hr;
-	V(device->CreateCommittedResource(
+	device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descResourceVB,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS( cbBuffer.GetAddressOf() )
-		));
+		);
 	return cbBuffer;
 }
 
@@ -262,21 +266,21 @@ ComPtr<ID3D12Resource> CreateDepthBuffer( ID3D12Device * device, int width, int 
 	dsvClearValue.DepthStencil.Depth = 1.0f;
 	dsvClearValue.DepthStencil.Stencil = 0;
 	HRESULT hr;
-	V(device->CreateCommittedResource(
+	device->CreateCommittedResource(
 		&heapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&descDepth,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&dsvClearValue,
 		IID_PPV_ARGS( depthBuffer.ReleaseAndGetAddressOf() )
-		));
+		);
 	return depthBuffer;
 }
 
 
-DXGfxCore::DXGfxCore()
+DXGfxCore::DXGfxCore(Communicator* commu)
 {
-
+    communicator = commu;
 }
 
 bool DXGfxCore::Init( HWND _hwnd )
@@ -376,7 +380,7 @@ HRESULT DXGfxCore::CreateDevice()
 	VRET(dxDevice->CreateRootSignature( 0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS( rootSignature.GetAddressOf() ) ));
 
 	FILE* fpVS = nullptr;
-	fopen_s( &fpVS, "VertexShader1.cso", "rb" );
+	fopen_s( &fpVS, "VertexShader.cso", "rb" );
 	if ( !fpVS ) 
 	{ 
 		DXTrace( __FILE__, ( DWORD ) __LINE__, "Cannot open VertexShader.cso" );
@@ -508,7 +512,8 @@ HRESULT DXGfxCore::Resize( uint16_t width, uint16_t height )
 	viewPort = { 0.0f, 0.0f, ( float ) windowWidth, ( float ) windowHeight, 0.0f, 1.0f };
 	viewRect = { 0, 0, windowWidth, windowHeight };
 
-	std::cout << "Back buffer resized to : " << width << "x" << height << "\n";
+	//std::cerr << "Back buffer resized to : " << width << "x" << height << "\n";
+	communicator->printMessage( QString( "Back buffer resized to: %1x%2" ).arg( QString::number(width), QString::number(height) ) );
 	return true;
 }
 

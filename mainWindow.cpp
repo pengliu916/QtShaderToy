@@ -2,23 +2,23 @@
 #include "DX12RenderWidget.h"
 
 #include "mainwindow.h"
-#include "qdebugstream.h"
+#include "Communicator.h"
+#include "TTYTextEdit.h"
 
 MainWindow::MainWindow()
 {
-	createMenus();
-	createDockWindows();
+    createMenus();
+    createDockWindows();
 
-	QDebugStream qcout( std::cout, outputList, Qt::black );
-	QDebugStream qcerr( std::cerr, outputList, Qt::red );
+    communicator = new Communicator();
 
-	std::cout << "std::cout is in Green!" << std::endl;
-	std::cerr << "std::cerr is in Red!" << std::endl;
+    QObject::connect( communicator, SIGNAL(emitString(QString)), ttyTextEdit, SLOT( appendHtml( QString ) ) );
+
+	renderWidget = new DX12RenderWidget( communicator );
 
 	setWindowTitle( tr( "DirectXFrame" ) );
 
-	renderWidget = new DX12RenderWidget();
-	setCentralWidget( renderWidget );
+    setCentralWidget( renderWidget );
 }
 
 void MainWindow::createMenus()
@@ -33,9 +33,9 @@ void MainWindow::createDockWindows()
 						   | Qt::LeftDockWidgetArea 
 						   | Qt::RightDockWidgetArea );
 
-	outputList = new QTextEdit( dock );
-	outputList->setLineWrapMode( QTextEdit::NoWrap );
-	dock->setWidget( outputList );
+    ttyTextEdit = new TTYTextEdit( dock );
+    dock->setWidget( ttyTextEdit );
 	addDockWidget( Qt::BottomDockWidgetArea, dock );
+
 	viewMenu->addAction( dock->toggleViewAction() );
 }

@@ -4,10 +4,11 @@
 #include <dxgi1_4.h>
 
 using namespace Microsoft::WRL;
+class Communicator;
 class DXGfxCore
 {
 public:
-	DXGfxCore();
+    DXGfxCore(Communicator*);
 	bool Init( HWND );
 	HRESULT CreateDevice();
 	HRESULT Resize( uint16_t, uint16_t );
@@ -15,6 +16,9 @@ public:
 	void Render();
 	void Release();
 	void Destory();
+
+	HRESULT DXTrace( const char*, DWORD, HRESULT, const char* );
+	void  DXTrace( const char*, DWORD, const char* );
 
 private:
 	void WaitForCommandQueue( ID3D12CommandQueue* );
@@ -50,4 +54,6 @@ private:
 
 	uint16_t							windowWidth;
 	uint16_t							windowHeight;
+
+    Communicator*                       communicator;
 };

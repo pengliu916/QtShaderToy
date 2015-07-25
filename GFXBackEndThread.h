@@ -3,18 +3,18 @@
 #include <QThread>
 
 #include "DXGfxCore.h"
-
+class Communicator;
 class GFXBackEndThread :public QThread
 {
 	Q_OBJECT
 public:
-	GFXBackEndThread(HWND _hwnd, uint16_t width, uint16_t height );
+    GFXBackEndThread(Communicator* commu, HWND _hwnd, uint16_t width, uint16_t height );
 	void stop();
 	void run();
 	void resize(uint16_t width, uint16_t height);
+	DXGfxCore* _gfxCore;
 
 private:
-	DXGfxCore* _gfxCore;
 	volatile bool _stopped;
 	volatile bool _needResize;
 	volatile bool _encounteredError;

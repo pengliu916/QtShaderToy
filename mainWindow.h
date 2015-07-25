@@ -2,10 +2,11 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-class QTextEdit;
 class QMenu;
 QT_END_NAMESPACE
 
+class Communicator;
+class TTYTextEdit;
 class DX12RenderWidget;
 
 class MainWindow : public QMainWindow
@@ -18,8 +19,9 @@ public:
 	void createMenus();
 	void createDockWindows();
 
-	DX12RenderWidget* renderWidget;
-	QTextEdit *outputList;
+    QMenu* viewMenu;
 
-	QMenu *viewMenu;
+	DX12RenderWidget*   renderWidget;
+    TTYTextEdit*        ttyTextEdit;
+    Communicator*       communicator;
 };

@@ -7,9 +7,17 @@ TARGET = DX12Frame
 INCLUDEPATH += .
 
 # Input
-HEADERS += DX12RenderWidget.h DXGfxCore.h GFXBackEndThread.h mainWindow.h
+HEADERS += DX12RenderWidget.h \
+	DXGfxCore.h \
+	GFXBackEndThread.h \
+	mainWindow.h \
+	Communicator.h \
+	TTYTextEdit.h
+ 
 SOURCES += DX12RenderWidget.cpp \
-           DXGfxCore.cpp \
-           GFXBackEndThread.cpp \
-           main.cpp \
-           mainWindow.cpp
+        DXGfxCore.cpp \
+        GFXBackEndThread.cpp \
+        main.cpp \
+        mainWindow.cpp \
+        Communicator.cpp \
+	TTYTextEdit.cpp

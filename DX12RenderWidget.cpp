@@ -1,6 +1,7 @@
 #include "DX12RenderWidget.h"
+#include "Communicator.h"
 
-DX12RenderWidget::DX12RenderWidget(QWidget* parent)
+DX12RenderWidget::DX12RenderWidget(Communicator* commu,QWidget* parent)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_PaintOnScreen, true);
@@ -8,19 +9,26 @@ DX12RenderWidget::DX12RenderWidget(QWidget* parent)
 
 	this->setMinimumWidth( 320 );
 	this->setMinimumHeight( 240 );
-	InitGFXBackEnd();
+
+    InitGFXBackEnd(commu);
 }
 
-void DX12RenderWidget::InitGFXBackEnd ()
+void DX12RenderWidget::InitGFXBackEnd (Communicator* commu)
 {
-	_gfxBackEndThread = new GFXBackEndThread ( ( HWND ) winId (), this->width(),this->height() );
+	_gfxBackEndThread = new GFXBackEndThread ( commu, ( HWND ) winId (), this->width(),this->height() );
 	_gfxBackEndThread->start ();
 }
+
 DX12RenderWidget::~DX12RenderWidget()
 {
 	_gfxBackEndThread->stop();
 	_gfxBackEndThread->wait();
     delete _gfxBackEndThread;
+}
+
+QSize DX12RenderWidget::sizeHint() const
+{
+	return QSize( 800, 600 );
 }
 
 void DX12RenderWidget::paintEvent(QPaintEvent* evt)
