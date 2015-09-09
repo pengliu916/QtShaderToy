@@ -297,7 +297,7 @@ HRESULT DXGfxCore::CreateDevice()
 	UINT flagsDXGI = 0;
 	ID3D12Debug* debug = nullptr;
 	HRESULT hr;
-#if 1 || _DEBUG
+#if 0 || _DEBUG
 	D3D12GetDebugInterface( IID_PPV_ARGS( &debug ) );
 	if ( debug ) {
 		debug->EnableDebugLayer();
